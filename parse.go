@@ -49,7 +49,7 @@ func buildLink(n *html.Node) Link {
 		}
 	}
 
-	// Parse link text 
+	// Parse link text
 	ret.Text = getText(n)
 
 	return ret
@@ -63,6 +63,9 @@ func getText(n *html.Node) string {
 		if c.Type == html.TextNode {
 			ret = ret + strings.TrimSpace(c.Data)
 			// break
+		} else if c.Type != html.ElementNode {
+			// e.g Comments
+			ret = ret + ""
 		} else {
 			ret = ret + " " + getText(c)
 		}
