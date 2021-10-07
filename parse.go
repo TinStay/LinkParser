@@ -56,22 +56,25 @@ func buildLink(n *html.Node) Link {
 }
 
 func getText(n *html.Node) string {
+	// Base cases
+	if n.Type == html.TextNode {
+		return n.Data
+	} 
+	
+	// e.g Comments
+	if n.Type != html.ElementNode {
+		return ""
+	} 
+	
 	var ret string
 
-	// Find text node
+	// Recursive call
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if c.Type == html.TextNode {
-			ret = ret + strings.TrimSpace(c.Data)
-			// break
-		} else if c.Type != html.ElementNode {
-			// e.g Comments
-			ret = ret + ""
-		} else {
-			ret = ret + " " + getText(c)
-		}
+		ret += getText(c)
 	}
 
-	return ret
+	// Return trimmed string
+	return strings.Join(strings.Fields(ret), " ")
 }
 
 func linkNodes(n *html.Node) []*html.Node {
